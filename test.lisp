@@ -4,11 +4,15 @@
 
 
 ;; predicts about operator
-(defmacro defoperator-p (name &key (start 0) end)
-  `(defun ,name (obj)
-     (find obj +operators+ :start ,start :end ,end)))
+(defun operatorp (op &key (start 0) end)
+  (find op +operators+ :start start :end end))
 
-(defoperator-p operatorp)
+(defmacro defoperator-p (name &key (start 0) end)
+  `(push
+    (defun ,name (obj)
+      (operatorp obj :start ,start :end ,end))
+    *op-predicts*))
+
 (defoperator-p junior-operator-p :start 0 :end 2)
 (defoperator-p midddle-operator-p :start 2 :end 4)
 (defoperator-p senior-operator-p :start 4 :end 5)
@@ -38,15 +42,13 @@
                                              ,(convert-form fst)
                                              ,(convert-form sec))
                                             ,@rest))
-                           `(,(convert-form fst) ,operator ,@(make-sure-list (convert-form `(,sec ,@rest))))
-                            ;`(,fst ,operator ,@(make-sure-list (convert-form `(,sec ,@rest))))
-                            
-                            ))))))
+                            `(,(convert-form fst)
+                              ,operator
+                              ,@(make-sure-list (convert-form `(,sec ,@rest))))))))))
     (convert-form form)))
 
-;; front
+;; front end
 (defmacro eval-expr (form)
-  ;(mapcar #'(lambda (fn) (loop-per-operator form fn)) *op-predicts*)
   (labels ((iter (form predicts-lst)
              (if (null predicts-lst)
                  form
