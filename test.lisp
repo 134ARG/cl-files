@@ -21,6 +21,9 @@
 (defun single-elt-p (expr)
   (eql (cdr expr) nil))
 
+(defun make-sure-list (obj)
+  (if (listp obj) obj (list obj)))
+
 
 ;; main convert function
 (defun loop-per-operator (form fn)
@@ -35,7 +38,8 @@
                                              ,(convert-form fst)
                                              ,(convert-form sec))
                                             ,@rest))
-                                        ;`(,(convert-form fst) ,operator ,(convert-form `(,sec ,@rest)))
+                           `(,(convert-form fst) ,operator ,@(make-sure-list (convert-form `(,sec ,@rest))))
+                            ;`(,fst ,operator ,@(make-sure-list (convert-form `(,sec ,@rest))))
                             
                             ))))))
     (convert-form form)))
