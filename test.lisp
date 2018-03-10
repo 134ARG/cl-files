@@ -29,6 +29,11 @@
   (if (listp obj) obj (list obj)))
 
 
+;; extra math function
+(defun ^ (base power)
+  (expt base power))
+
+
 ;; main convert function
 (defun loop-per-operator (form fn)
   (labels ((convert-form (form)
