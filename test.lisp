@@ -29,7 +29,7 @@
   (if (listp obj) obj (list obj)))
 
 
-;; extra math function
+;; extra mathematics function
 (defun ^ (base power)
   (expt base power))
 
