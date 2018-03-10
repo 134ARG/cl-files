@@ -6,9 +6,7 @@
 ;; predicts about operator
 (defmacro defoperator-p (name &key (start 0) end)
   `(defun ,name (obj)
-     (find obj +operators+ :start ,start :end ,end))
-  ;`(push #',name *op-predicts*)
-  )
+     (find obj +operators+ :start ,start :end ,end)))
 
 (defoperator-p operatorp)
 (defoperator-p junior-operator-p :start 0 :end 2)
@@ -37,9 +35,9 @@
                                              ,(convert-form fst)
                                              ,(convert-form sec))
                                             ,@rest))
-                            `(,(convert-form fst)
-                              ,operator
-                              ,(convert-form `(,sec ,@rest)))))))))
+                                        ;`(,(convert-form fst) ,operator ,(convert-form `(,sec ,@rest)))
+                            
+                            ))))))
     (convert-form form)))
 
 ;; front
