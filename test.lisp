@@ -37,9 +37,9 @@
 ;; main convert function
 (defun loop-per-operator (form fn)
   (labels ((convert-form (form)
-             (cond ((or (atom form)
-                        (translated-form-p form))
-                    form)
+             (cond ((atom form) form)
+		   ((translated-form-p form)
+		    `(,(first form) ,(convert-form (second form)) ,(convert-form (third form))))
                    ((single-elt-p form) (convert-form (car form)))
                    (t (destructuring-bind (fst operator sec &rest rest) form
                         (if (funcall fn operator)
@@ -49,7 +49,7 @@
                                             ,@rest))
                             `(,(convert-form fst)
                               ,operator
-                              ,@(make-sure-list (convert-form `(,sec ,@rest))))))))))
+                              ,@`((,(convert-form `(,sec ,@rest)))))))))))
     (convert-form form)))
 
 ;; front end
